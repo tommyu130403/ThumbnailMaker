@@ -1,23 +1,27 @@
 # Dependencies
 node_modules/
+jspm_packages/
+bower_components/
 .pnp
 .pnp.js
+.pnp.*
 
 # Build output
 dist/
 dist-ssr/
 build/
+build/Release
+out/
 
 # Environment variables
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
 # Editor / OS
 .DS_Store
 .vscode/
+.vscode-test
 .idea/
 *.suo
 *.ntvs*
@@ -26,10 +30,69 @@ build/
 *.sw?
 
 # Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage
+*.lcov
+.nyc_output
+lib-cov
+
+# Cache
+.npm
+.eslintcache
+.stylelintcache
+.cache
+.parcel-cache
+.grunt
+.lock-wscript
 
 # TypeScript
 *.tsbuildinfo
+
+# Optional
+.node_repl_history
+*.tgz
+.yarn-integrity
+
+# Yarn v3
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Framework outputs
+.next
+.nuxt
+.svelte-kit/
+.vuepress/dist
+.temp
+**/.vitepress/dist
+**/.vitepress/cache
+.docusaurus
+.serverless/
+.fusebox/
+.dynamodb/
+.firebase/
+.tern-port
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
