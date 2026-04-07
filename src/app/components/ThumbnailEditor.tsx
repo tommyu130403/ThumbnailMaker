@@ -97,6 +97,28 @@ async function captureElement(el: HTMLElement) {
             styleEl.textContent = convertOklch(css);
           }
         });
+
+        // 本番ビルドでは CSS が <link rel="stylesheet"> 外部ファイルになるため、
+        // <style> タグへの変換だけでは oklch が処理されず html2canvas がエラーになる。
+        // 外部 CSS をフェッチして同一オリジンのものはインライン <style> に差し替える。
+        const linkEls = Array.from(
+          clonedDoc.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]')
+        );
+        await Promise.all(
+          linkEls.map(async (linkEl) => {
+            const href = linkEl.href;
+            if (!href) return;
+            try {
+              const res = await fetch(href);
+              const css = await res.text();
+              const styleEl = clonedDoc.createElement('style');
+              styleEl.textContent = css.includes('oklch') ? convertOklch(css) : css;
+              linkEl.parentNode?.replaceChild(styleEl, linkEl);
+            } catch {
+              // 外部オリジン（Google Fonts 等）は CORS でブロックされる場合があるため無視
+            }
+          })
+        );
       },
     });
   } finally {
