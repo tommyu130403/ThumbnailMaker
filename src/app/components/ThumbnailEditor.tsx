@@ -51,6 +51,11 @@ function convertOklch(val: string): string {
 // ② html2canvas の onclone コールバックで cloned document の <style> タグを書き換え、
 //    Tailwind v4 が使う oklch() カラー変数をすべて rgb() に変換してから描画させる
 async function captureElement(el: HTMLElement) {
+  // フォントが完全に読み込まれるまで待機する。
+  // 未ロードのままだとクローンドキュメントでフォールバックフォントが使われ、
+  // メトリクス差異によってタイトルの上下余白がプレビューとずれる原因になる。
+  await document.fonts.ready;
+
   const wrap = document.createElement('div');
   wrap.style.cssText =
     'position:fixed;left:-99999px;top:0;width:1200px;height:630px;overflow:hidden;z-index:-1;pointer-events:none;';
@@ -74,7 +79,14 @@ async function captureElement(el: HTMLElement) {
       useCORS: true,
       allowTaint: true,
       logging: false,
-      onclone: (clonedDoc) => {
+      onclone: async (clonedDoc) => {
+        // メインドキュメントのフォントフェイスをクローンドキュメントにコピーすることで、
+        // html2canvas 内部のレンダリング時に正しいフォントメトリクスが使われるようにする。
+        for (const fontFace of document.fonts.values()) {
+          clonedDoc.fonts.add(fontFace);
+        }
+        await clonedDoc.fonts.ready;
+
         // html2canvas が内部で作るクローンドキュメントの <style> タグを直接書き換える。
         // Tailwind v4 は --color-* 変数を oklch() で定義しており、
         // html2canvas の CSS パーサーがこれを解釈できずエラーになる。
