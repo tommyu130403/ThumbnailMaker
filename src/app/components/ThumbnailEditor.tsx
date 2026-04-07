@@ -80,6 +80,13 @@ async function captureElement(el: HTMLElement) {
       allowTaint: true,
       logging: false,
       onclone: async (clonedDoc) => {
+        // html2canvas のクローンドキュメントでは UA スタイルシートの
+        // margin-block-start/end が h1 等に再適用され、inline の margin-top:0 を
+        // 上書きしてしまう。先頭に !important リセットを注入して打ち消す。
+        const uaReset = clonedDoc.createElement('style');
+        uaReset.textContent = 'h1,h2,h3,h4,h5,h6{margin-block-start:0!important;margin-block-end:0!important;}';
+        clonedDoc.head.prepend(uaReset);
+
         // メインドキュメントのフォントフェイスをクローンドキュメントにコピーすることで、
         // html2canvas 内部のレンダリング時に正しいフォントメトリクスが使われるようにする。
         for (const fontFace of document.fonts.values()) {
