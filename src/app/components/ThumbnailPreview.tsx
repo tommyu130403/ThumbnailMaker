@@ -152,7 +152,8 @@ export const ThumbnailPreview = forwardRef<HTMLDivElement, ThumbnailPreviewProps
               &#8212; {data.tag ?? 'Design Work'}
             </div>
 
-            <h1
+            {/* div を使用: h1 の UA margin-block-start が html2canvas で復活する問題を回避 */}
+            <div
               style={{
                 color: data.textColor,
                 fontSize: '3rem',
@@ -160,14 +161,13 @@ export const ThumbnailPreview = forwardRef<HTMLDivElement, ThumbnailPreviewProps
                 letterSpacing: '-0.03em',
                 lineHeight: 1.1,
                 fontWeight: 600,
-                marginTop: 0,
-                marginBottom: '20px',
+                margin: '0 0 20px 0',
                 padding: 0,
                 textAlign: 'left' as const,
               }}
             >
               {data.title}
-            </h1>
+            </div>
 
             {/* Accent dash */}
             <div
@@ -179,7 +179,8 @@ export const ThumbnailPreview = forwardRef<HTMLDivElement, ThumbnailPreviewProps
               }}
             />
 
-            <p
+            {/* div を使用: p の UA margin-block-start/end が html2canvas で復活する問題を回避 */}
+            <div
               style={{
                 color: data.textColor,
                 opacity: 0.55,
@@ -188,10 +189,11 @@ export const ThumbnailPreview = forwardRef<HTMLDivElement, ThumbnailPreviewProps
                 lineHeight: 1.6,
                 fontFamily: FONT,
                 fontWeight: 400,
+                margin: 0,
               }}
             >
               {data.subtitle}
-            </p>
+            </div>
           </div>
           {renderDeviceArea()}
         </div>
